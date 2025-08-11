@@ -1,21 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CloudflareD1Service } from '@/lib/cloudflare-d1';
 
 export async function GET(request: NextRequest) {
   try {
-    const database = new CloudflareD1Service();
-    
-    const predictions = await database.getPredictions();
-    
-    return NextResponse.json({ success: true, data: predictions });
-  } catch (error: unknown) {
-    console.error('Error fetching predictions:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    // For now, return empty array
+    // TODO: Implement actual database queries
+    const predictions = [];
+
+    return NextResponse.json({
+      predictions,
+      count: predictions.length,
+      timestamp: new Date().toISOString(),
+      status: 'mock_data'
+    });
+
+  } catch (error) {
+    console.error('Predictions route error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
         error: 'Failed to fetch predictions',
-        message: errorMessage
+        message: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

@@ -1,39 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LunarCrushService } from '@/lib/lunarcrush';
-import { GeminiService } from '@/lib/gemini';
-import { getDatabase } from '@/lib/get-database';
-import { generatePrediction } from '@/lib/prediction-engine';
-
-interface PredictRequest {
-  cryptoSymbol: string;
-  timeframe: number;
-}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as PredictRequest;
+    const body = await request.json();
     const { cryptoSymbol, timeframe } = body;
-    
-    // Initialize services
-    const lunarCrush = new LunarCrushService(process.env.LUNARCRUSH_API_KEY!);
-    const gemini = new GeminiService(process.env.GEMINI_API_KEY!);
-    const database = getDatabase();
-    
-    // Generate prediction using LLM-powered analysis
-    const prediction = await generatePrediction(cryptoSymbol, timeframe, lunarCrush, gemini, database);
-    
-    // Cleanup
-    await lunarCrush.close();
-    
-    return NextResponse.json({ success: true, data: prediction });
-  } catch (error: unknown) {
-    console.error('Error generating prediction:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+    if (!cryptoSymbol) {
+      return NextResponse.json(
+        { error: 'cryptoSymbol is required' },
+        { status: 400 }
+      );
+    }
+
+    // Get API keys from environment
+    const lunarcrushKey = process.env.LUNARCRUSH_API_KEY;
+    const geminiKey = process.env.GEMINI_API_KEY;
+
+    if (!lunarcrushKey || !geminiKey) {
+      return NextResponse.json(
+        { error: 'API keys not configured' },
+        { status: 500 }
+      );
+    }
+
+    // For now, return a simple mock prediction
+    // TODO: Implement actual AI prediction logic
+    const prediction = {
+      symbol: cryptoSymbol,
+      timeframe: timeframe || 24,
+      prediction: 'bullish',
+      confidence: 0.75,
+      reasoning: 'Social sentiment analysis indicates positive momentum',
+      timestamp: new Date().toISOString(),
+      status: 'mock_prediction'
+    };
+
+    return NextResponse.json(prediction);
+
+  } catch (error) {
+    console.error('Predict route error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
         error: 'Failed to generate prediction',
-        message: errorMessage
+        message: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Simple health check - no authentication required
     return NextResponse.json({
       status: 'healthy',
       service: 'LunarOracle API',
       timestamp: new Date().toISOString(),
-      version: '0.3.0'
+      version: '0.3.0',
+      environment: process.env.NODE_ENV || 'development'
     });
   } catch (error) {
     return NextResponse.json(

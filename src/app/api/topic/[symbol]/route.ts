@@ -1,27 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LunarCrushService } from '@/lib/lunarcrush';
 
 export async function GET(
-	request: NextRequest,
-	{ params }: { params: { symbol: string } }
+  request: NextRequest,
+  { params }: { params: { symbol: string } }
 ) {
-	try {
-		const { symbol } = params;
-		const lunarCrush = new LunarCrushService(process.env.LUNARCRUSH_API_KEY!);
+  try {
+    const { symbol } = params;
 
-		const topicData = await lunarCrush.getTopicData(symbol);
-		await lunarCrush.close();
+    // Get LunarCrush API key from environment
+    const apiKey = process.env.LUNARCRUSH_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'LunarCrush API key not configured' },
+        { status: 500 }
+      );
+    }
 
-		return NextResponse.json({ success: true, data: topicData });
-	} catch (error) {
-		console.error('Error fetching topic data:', error);
-		return NextResponse.json(
-			{
-				success: false,
-				error: 'Failed to fetch topic data',
-				message: error instanceof Error ? error.message : 'Unknown error',
-			},
-			{ status: 500 }
-		);
-	}
+    // Simple fetch to LunarCrush API (no complex SDK needed for basic calls)
+    const response = await fetch(
+      `https://lunarcrush.com/api4/public/coins/${symbol}?data=market,social&key=${apiKey}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: `LunarCrush API error: ${response.status}` },
+        { status: response.status }
+      );
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
+
+  } catch (error) {
+    console.error('Topic route error:', error);
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch topic data',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
+  }
 }
