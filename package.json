@@ -10,9 +10,29 @@
     "build": "tsc",
     "db:migrate": "wrangler d1 execute lunarcrush-universal-db --file=database/schema.sql"
   },
-  "keywords": ["crypto", "ai", "predictions", "social-sentiment", "lunarcrush"],
+  "keywords": [
+    "crypto",
+    "ai",
+    "predictions",
+    "social-sentiment",
+    "lunarcrush"
+  ],
   "author": "Danilo Batson",
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@hono/node-server": "^1.18.1",
+    "hono": "^4.9.0",
+    "lunarcrush-sdk": "^3.5.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250810.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.2.1",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.28.1"
+  }
 }

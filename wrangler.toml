@@ -1,22 +1,21 @@
-name = "lunaroracle-api"
+name = "lunaroracle"
 main = "src/index.ts"
-compatibility_date = "2025-01-15"
-compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2024-08-11"
 
 [env.development]
-name = "lunaroracle-api-dev"
+vars = { ENVIRONMENT = "development" }
 
 [env.production]
-name = "lunaroracle-api"
+vars = { ENVIRONMENT = "production" }
 
-[[env.production.d1_databases]]
+# Database configuration (we'll connect to existing lunarcrush-universal-db)
+[[d1_databases]]
 binding = "DB"
 database_name = "lunarcrush-universal-db"
-database_id = "your-database-id"
+database_id = "" # We'll need to get this from Cloudflare dashboard
 
-[[env.production.kv_namespaces]]
+# KV namespace for caching
+[[kv_namespaces]]
 binding = "CACHE"
-id = "your-kv-namespace-id"
-
-[vars]
-ENVIRONMENT = "development"
+id = "" # We'll set this up later
+preview_id = ""
