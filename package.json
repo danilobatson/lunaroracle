@@ -1,34 +1,32 @@
 {
   "name": "lunaroracle",
-  "version": "0.1.0",
-  "description": "AI agent that predicts crypto price movements using social sentiment data",
-  "main": "src/index.ts",
+  "version": "0.3.0",
+  "description": "LunarOracle: AI agent that predicts crypto price movements using social sentiment data",
+  "private": true,
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "build": "npx tsc",
-    "type-check": "npx tsc --noEmit",
-    "db:migrate": "wrangler d1 execute lunarcrush-universal-db --file=database/schema.sql",
-    "db:local": "wrangler d1 execute lunarcrush-universal-db --local --file=database/schema.sql"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "deploy": "vercel --prod"
   },
-  "keywords": [
-    "crypto",
-    "ai",
-    "predictions",
-    "social-sentiment",
-    "lunarcrush"
-  ],
-  "author": "Danilo Batson",
-  "license": "MIT",
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20250810.0",
-    "@google/generative-ai": "^0.24.1",
-    "@hono/node-server": "^1.18.1",
-    "@types/jest": "^30.0.0",
-    "hono": "^4.9.0",
-    "lunarcrush-sdk": "^3.5.0",
-    "typescript": "^5.9.2"
-  }
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "lunarcrush-sdk": "latest",
+    "@google/generative-ai": "latest",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  },
+  "keywords": ["crypto", "ai", "predictions", "social-sentiment", "lunarcrush", "nextjs"],
+  "author": "Danilo Batson",
+  "license": "MIT"
 }

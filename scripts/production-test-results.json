@@ -1,0 +1,6 @@
+{
+  "success": false,
+  "error": "Topic endpoint failed: Failed to fetch topic data",
+  "timestamp": "2025-08-11T19:15:16.807Z",
+  "worker_url": "https://lunaroracle.cryptoguard-api.workers.dev"
+}

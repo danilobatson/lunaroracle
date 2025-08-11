@@ -1,5 +1,5 @@
 import { createLunarCrushMCP } from 'lunarcrush-sdk';
-import { LunarCrushMetrics, SocialPost } from '../types';
+import { LunarCrushMetrics, SocialPost } from "./types";
 
 export class LunarCrushService {
   private apiKey: string;

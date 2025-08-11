@@ -1,7 +1,7 @@
 import { LunarCrushService } from './lunarcrush';
 import { GeminiService } from './gemini';
-import { DatabaseService } from './database';
-import { PredictionResponse } from '../types';
+import { DatabaseInterface } from './database-interface';
+import { PredictionResponse } from './types';
 
 // Modern ES6+ functions instead of classes
 export const generatePrediction = async (
@@ -9,7 +9,7 @@ export const generatePrediction = async (
   timeframe: number = 24,
   lunarCrush: LunarCrushService,
   gemini: GeminiService,
-  database: DatabaseService
+  database: DatabaseInterface
 ): Promise<PredictionResponse> => {
   try {
     // Get real social data from LunarCrush SDK
@@ -60,7 +60,7 @@ export const generateAgentResponse = async (
   userMessage: string,
   lunarCrush: LunarCrushService,
   gemini: GeminiService,
-  database: DatabaseService,
+  database: DatabaseInterface,
   cryptoSymbol?: string
 ): Promise<string> => {
   try {
@@ -103,7 +103,7 @@ I combine Galaxy Scores, social dominance, sentiment analysis, and AI to give yo
 };
 
 // Helper function with modern syntax
-const getHistoricalAccuracy = async (cryptoSymbol: string, database: DatabaseService): Promise<number> => {
+const getHistoricalAccuracy = async (cryptoSymbol: string, database: DatabaseInterface): Promise<number> => {
   try {
     const recentPredictions = await database.getPredictions(cryptoSymbol);
     const resolvedPredictions = recentPredictions.filter(({ accuracy_score }) => accuracy_score !== null);

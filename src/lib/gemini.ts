@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GeminiPredictionOutput } from '../types';
+import { GeminiPredictionOutput } from "./types";
 
 export class GeminiService {
   public model: any;
