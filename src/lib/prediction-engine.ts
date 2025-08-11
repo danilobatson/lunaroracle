@@ -49,9 +49,10 @@ export const generatePrediction = async (
     
     return { ...prediction, id: predictionId };
     
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error generating prediction:', error);
-    throw new Error(`Failed to generate prediction for ${cryptoSymbol}: ${error.message}`);
+    throw new Error(`Failed to generate prediction for ${cryptoSymbol}: ${errorMessage}`);
   }
 };
 
@@ -94,7 +95,8 @@ Ask me about any major cryptocurrency like:
 
 I combine Galaxy Scores, social dominance, sentiment analysis, and AI to give you data-driven predictions! 📊✨`;
     }
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error generating agent response:', error);
     return `🔮 LunarOracle here! I'm having trouble accessing the social data right now, but I'm working to get back online. Try asking me about a specific crypto in a moment! 🛠️`;
   }
@@ -111,7 +113,7 @@ const getHistoricalAccuracy = async (cryptoSymbol: string, database: DatabaseSer
     const avgAccuracy = resolvedPredictions.reduce((sum, { accuracy_score }) => sum + (accuracy_score || 0), 0) / resolvedPredictions.length;
     
     return Math.round(avgAccuracy);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error getting historical accuracy:', error);
     return 70; // Default fallback
   }

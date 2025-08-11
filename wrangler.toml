@@ -12,10 +12,10 @@ vars = { ENVIRONMENT = "production" }
 [[d1_databases]]
 binding = "DB"
 database_name = "lunarcrush-universal-db"
-database_id = "" # We'll need to get this from Cloudflare dashboard
+database_id = "8eb77518-7262-429c-954b-ee5e9ca67213"
 
 # KV namespace for caching
-[[kv_namespaces]]
-binding = "CACHE"
-id = "" # We'll set this up later
-preview_id = ""
+#[[kv_namespaces]]
+#binding = "CACHE"
+#id = "" # We'll set this up later
+#preview_id = ""

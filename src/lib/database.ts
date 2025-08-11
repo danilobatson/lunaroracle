@@ -48,7 +48,9 @@ export class DatabaseService {
       query += ' ORDER BY created_at DESC LIMIT 50';
 
       const result = await this.db.prepare(query).bind(...params).all();
-      return result.results as DbPrediction[];
+      
+      // Properly type the results with unknown first, then cast
+      return (result.results as unknown[]).map(row => row as DbPrediction);
     } catch (error) {
       console.error('Error fetching predictions:', error);
       throw error;
