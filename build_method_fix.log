@@ -1,0 +1,20 @@
+yarn run v1.22.22
+$ next build
+ ⚠ Invalid next.config.js options detected: 
+ ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
+ ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+  ▲ Next.js 14.2.31
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./src/app/api/predictions/[symbol]/route.ts
+Module not found: Can't resolve '@/lib/cloudflare-d1'
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+> Build failed because of webpack errors
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

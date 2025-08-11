@@ -1,0 +1,13 @@
+{
+  "name": "lunaroracle",
+  "version": 2,
+  "build": {
+    "env": {
+      "LUNARCRUSH_API_KEY": "@lunarcrush-api-key",
+      "GEMINI_API_KEY": "@gemini-api-key",
+      "CLOUDFLARE_ACCOUNT_ID": "@cloudflare-account-id",
+      "CLOUDFLARE_D1_DATABASE_ID": "@cloudflare-d1-database-id",
+      "CLOUDFLARE_API_TOKEN": "@cloudflare-api-token"
+    }
+  }
+}

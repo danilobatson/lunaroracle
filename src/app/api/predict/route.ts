@@ -1,18 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createPredictionEngine } from '@/lib/prediction-engine';
 
 interface PredictionRequest {
   cryptoSymbol: string;
   timeframe?: number;
-}
-
-interface PredictionResponse {
-  symbol: string;
-  timeframe: number;
-  prediction: string;
-  confidence: number;
-  reasoning: string;
-  timestamp: string;
-  status: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -27,30 +18,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get API keys from environment
-    const lunarcrushKey = process.env.LUNARCRUSH_API_KEY;
-    const geminiKey = process.env.GEMINI_API_KEY;
+    console.log(`Predict route called for ${cryptoSymbol}`);
 
-    if (!lunarcrushKey || !geminiKey) {
-      return NextResponse.json(
-        { error: 'API keys not configured' },
-        { status: 500 }
-      );
-    }
+    // Create prediction engine and generate prediction
+    const predictionEngine = createPredictionEngine();
+    const prediction = await predictionEngine.generatePrediction({
+      cryptoSymbol,
+      timeframe: timeframe || 24
+    });
 
-    // For now, return a simple mock prediction
-    // TODO: Implement actual AI prediction logic
-    const prediction: PredictionResponse = {
-      symbol: cryptoSymbol,
-      timeframe: timeframe || 24,
-      prediction: 'bullish',
-      confidence: 0.75,
-      reasoning: 'Social sentiment analysis indicates positive momentum',
-      timestamp: new Date().toISOString(),
-      status: 'mock_prediction'
-    };
-
-    return NextResponse.json(prediction);
+    return NextResponse.json({
+      success: true,
+      prediction,
+      timestamp: new Date().toISOString()
+    });
 
   } catch (error) {
     console.error('Predict route error:', error);

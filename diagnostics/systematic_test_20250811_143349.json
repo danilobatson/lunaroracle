@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-08-11T21:34:22Z",
+  "deployment_url": "URL not found",
+  "deployment_status": "SUCCESS",
+  "test_results": {
+    "health_endpoint": {
+      "status": "000",
+      "test_result": "FAILED",
+      "response": " ",
+      "auth_required": false
+    },
+    "topic_endpoint_no_auth": {
+      "status": "000",
+      "response_preview": " "
+    },
+    "topic_endpoint_with_auth": {
+      "status": "000",
+      "response_preview": " "
+    },
+    "predict_endpoint_no_auth": {
+      "status": "000",
+      "response_preview": " "
+    }
+  },
+  "analysis": {
+    "health_working": false,
+    "other_routes_auth_issue": false,
+    "environment_variables_issue": "likely",
+    "next_steps": [
+      "Check route implementations for env var access",
+      "Verify LunarCrush SDK initialization",
+      "Fix authentication middleware if needed"
+    ]
+  }
+}

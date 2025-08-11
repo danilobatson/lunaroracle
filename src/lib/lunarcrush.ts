@@ -1,115 +1,77 @@
-import { createLunarCrushMCP } from 'lunarcrush-sdk';
-import { LunarCrushMetrics, SocialPost } from "./types";
+import { LunarCrush } from 'lunarcrush-sdk';
 
+// Simple LunarCrush service using only confirmed working methods
 export class LunarCrushService {
-  private apiKey: string;
-  private mcp: any = null;
+  private client: LunarCrush;
 
   constructor(apiKey: string) {
-    this.apiKey = apiKey;
+    this.client = new LunarCrush(apiKey);
   }
 
-  private async initMCP() {
-    if (!this.mcp) {
-      this.mcp = await createLunarCrushMCP(this.apiKey);
-    }
-    return this.mcp;
-  }
-
-  async getTopicData(symbol: string): Promise<LunarCrushMetrics> {
+  // Get topic data for a cryptocurrency (using confirmed working method)
+  async getTopic(symbol: string) {
     try {
-      const mcp = await this.initMCP();
-      
-      // Use the SDK's topic method for full topic details
-      const topicData = await mcp.topics(symbol);
-      
-      // Parse the response - SDK returns structured data
-      const data = topicData.data?.[0] || topicData;
-      
+      console.log(`Getting topic data for: ${symbol}`);
+
+      // Use the SDK's coins.get method (confirmed to exist)
+      const data = await this.client.coins.get(symbol);
+
       return {
-        symbol: data.symbol || symbol,
-        galaxy_score: data.galaxy_score || data.gs || 0,
-        social_dominance: data.social_dominance || data.sd || 0,
-        sentiment: data.sentiment || data.ss || 50,
-        posts_active: data.posts_active || data.pa || 0,
-        contributors_active: data.contributors_active || data.ca || 0,
-        interactions: data.interactions || data.i || 0,
-        price: data.close || data.price || data.p || 0,
-        percent_change_24h: data.percent_change_24h || data.pc24h || 0,
+        success: true,
+        data,
+        timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.error('Error fetching topic data with SDK:', error);
-      throw error;
+      console.error('LunarCrush topic error:', error);
+      throw new Error(`Failed to fetch topic data for ${symbol}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
-  async getTopicPosts(symbol: string, interval: string = '24h'): Promise<SocialPost[]> {
+  // Get list of cryptocurrencies (using confirmed working method)
+  async getCryptocurrencies(options = {}) {
     try {
-      const mcp = await this.initMCP();
-      
-      // Use SDK's topicPosts method
-      const postsData = await mcp.topicPosts(symbol, { interval });
-      const posts = postsData.data || [];
-      
-      return posts.map((post: any) => ({
-        id: post.id || Math.random().toString(),
-        text: post.text || post.content || '',
-        sentiment: post.sentiment || 50,
-        interactions: post.interactions || post.likes || post.retweets || 0,
-        created_time: post.created_time || post.created_at || new Date().toISOString(),
-        user_followers: post.user_followers || post.followers || 0,
-      }));
+      console.log('Getting cryptocurrency list');
+
+      // Use the SDK's coins.list method (confirmed to exist)
+      const data = await this.client.coins.list(options);
+
+      return {
+        success: true,
+        data,
+        timestamp: new Date().toISOString()
+      };
     } catch (error) {
-      console.error('Error fetching topic posts with SDK:', error);
-      return [];
+      console.error('LunarCrush cryptocurrencies error:', error);
+      throw new Error(`Failed to fetch cryptocurrencies: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
-  async getTimeSeries(symbol: string, interval: string = '1w'): Promise<any[]> {
+  // Health check for the service
+  async healthCheck() {
     try {
-      const mcp = await this.initMCP();
-      
-      // Use SDK's timeSeries method - returns TSV format
-      const timeSeriesData = await mcp.timeSeries(symbol, { interval });
-      
-      // Parse TSV data if needed, or return as-is
-      return timeSeriesData.data || [];
+      // Simple test with minimal data to verify API key works
+      const data = await this.client.coins.list({ limit: 1 });
+      return {
+        success: true,
+        message: 'LunarCrush SDK is working',
+        timestamp: new Date().toISOString()
+      };
     } catch (error) {
-      console.error('Error fetching time series with SDK:', error);
-      return [];
-    }
-  }
-
-  async getCryptocurrencies(options: any = {}): Promise<any[]> {
-    try {
-      const mcp = await this.initMCP();
-      
-      // Use SDK's cryptocurrencies method for market data
-      const cryptoData = await mcp.cryptocurrencies(options);
-      return cryptoData.data || [];
-    } catch (error) {
-      console.error('Error fetching cryptocurrencies with SDK:', error);
-      return [];
-    }
-  }
-
-  async searchTopics(query: string): Promise<any[]> {
-    try {
-      const mcp = await this.initMCP();
-      
-      // Use SDK's universal search
-      const searchData = await mcp.search(query);
-      return searchData.data || [];
-    } catch (error) {
-      console.error('Error searching topics with SDK:', error);
-      return [];
-    }
-  }
-
-  async close(): Promise<void> {
-    if (this.mcp) {
-      await this.mcp.close();
-      this.mcp = null;
+      console.error('LunarCrush health check error:', error);
+      throw new Error(`LunarCrush SDK health check failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 }
+
+// Factory function to create LunarCrush service
+export function createLunarCrushService(apiKey?: string): LunarCrushService {
+  const key = apiKey || process.env.LUNARCRUSH_API_KEY;
+
+  if (!key) {
+    throw new Error('LunarCrush API key is required. Set LUNARCRUSH_API_KEY environment variable.');
+  }
+
+  return new LunarCrushService(key);
+}
+
+export default createLunarCrushService;

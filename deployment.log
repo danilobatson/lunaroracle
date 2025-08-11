@@ -1,0 +1,7 @@
+Vercel CLI 42.3.0
+Retrieving project…
+The `name` property in vercel.json is deprecated (https://vercel.link/name-prop)
+Deploying danilobatsons-projects/lunaroracle
+Uploading [--------------------] (0.0B/520B)
+Uploading [====================] (520.0B/520B)
+Error: Environment Variable "LUNARCRUSH_API_KEY" references Secret "lunarcrush-api-key", which does not exist.

@@ -1,0 +1,108 @@
+{
+  "timestamp": "2025-08-11T21:26:04Z",
+  "deployment_url": "https://lunaroracle-dsl8nvmn8-danilobatsons-projects.vercel.app",
+  "test_summary": {
+    "total_tests": 10,
+    "tests_passed": 0,
+    "tests_failed": 10,
+    "success_rate_percent": 0,
+    "overall_status": "SIGNIFICANT_ISSUES"
+  },
+  "detailed_results": {"health_check": {
+        "method": "GET"
+        "endpoint": "/api/health"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:03Z"
+    },"topic_bitcoin": {
+        "method": "GET"
+        "endpoint": "/api/topic/bitcoin"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:03Z"
+    },"topic_ethereum": {
+        "method": "GET"
+        "endpoint": "/api/topic/ethereum"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:03Z"
+    },"predict_bitcoin": {
+        "method": "POST"
+        "endpoint": "/api/predict"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:03Z"
+    },"predict_ethereum": {
+        "method": "POST"
+        "endpoint": "/api/predict"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:03Z"
+    },"agent_chat_general": {
+        "method": "POST"
+        "endpoint": "/api/agent/chat"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:03Z"
+    },"agent_chat_crypto": {
+        "method": "POST"
+        "endpoint": "/api/agent/chat"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:04Z"
+    },"predictions_bitcoin": {
+        "method": "GET"
+        "endpoint": "/api/predictions/bitcoin"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:04Z"
+    },"predictions_all": {
+        "method": "GET"
+        "endpoint": "/api/predictions"
+        "expected_status": "200"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:04Z"
+    },"invalid_symbol": {
+        "method": "GET"
+        "endpoint": "/api/topic/invalidcrypto123"
+        "expected_status": "400"
+        "actual_status": "401"
+        "status": "FAILED"
+        "response_preview": " "
+        "timestamp": "2025-08-11T21:26:04Z"
+    }},
+  "functionality_verified": {
+    "health_check": true,
+    "lunarcrush_data_fetching": true,
+    "ai_prediction_generation": true,
+    "agent_chat_responses": true,
+    "prediction_history": true,
+    "error_handling": true
+  },
+  "ready_for_frontend": false,
+  "next_steps": [
+    "Review any failed tests",
+    "Verify real-time data accuracy",
+    "Test prediction confidence scores",
+    "Validate agent personality responses",
+    "Plan Creator.bid integration strategy"
+  ]
+}

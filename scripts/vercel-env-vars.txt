@@ -1,0 +1,7 @@
+Environment Variables for Vercel Dashboard:
+LUNARCRUSH_API_KEY=vcbhz3zf90hd7rtk97d3k436x8me7eb0tb77fjk2d
+GEMINI_API_KEY=AIzaSyCBKmjYBpNOm-ZA4UKrqjlyoWXkWZRdKNc
+Optional (add later for database):
+CLOUDFLARE_ACCOUNT_ID=your_account_id
+CLOUDFLARE_D1_DATABASE_ID=your_database_id
+CLOUDFLARE_API_TOKEN=your_api_token

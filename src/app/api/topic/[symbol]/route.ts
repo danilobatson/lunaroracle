@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createLunarCrushService } from '@/lib/lunarcrush';
 
 export async function GET(
   request: NextRequest,
@@ -7,41 +8,27 @@ export async function GET(
   try {
     const { symbol } = params;
 
-    // Get LunarCrush API key from environment
-    const apiKey = process.env.LUNARCRUSH_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'LunarCrush API key not configured' },
-        { status: 500 }
-      );
-    }
+    console.log(`Topic route called for symbol: ${symbol}`);
 
-    // Simple fetch to LunarCrush API (no complex SDK needed for basic calls)
-    const response = await fetch(
-      `https://lunarcrush.com/api4/public/coins/${symbol}?data=market,social&key=${apiKey}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    // Create LunarCrush service with API key from environment
+    const lunarCrush = createLunarCrushService();
 
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: `LunarCrush API error: ${response.status}` },
-        { status: response.status }
-      );
-    }
+    // Get topic data using the SDK
+    const result = await lunarCrush.getTopic(symbol);
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    return NextResponse.json(result);
 
   } catch (error) {
     console.error('Topic route error:', error);
+
+    // Return detailed error information
     return NextResponse.json(
       {
+        success: false,
         error: 'Failed to fetch topic data',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
+        symbol: params.symbol,
+        timestamp: new Date().toISOString()
       },
       { status: 500 }
     );

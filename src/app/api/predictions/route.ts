@@ -11,10 +11,11 @@ interface Prediction {
 export async function GET(request: NextRequest) {
   try {
     // For now, return empty array with proper typing
-    // TODO: Implement actual database queries
+    // TODO: Implement actual database queries when database is set up
     const predictions: Prediction[] = [];
 
     return NextResponse.json({
+      success: true,
       predictions,
       count: predictions.length,
       timestamp: new Date().toISOString(),

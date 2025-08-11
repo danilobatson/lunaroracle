@@ -1,0 +1,33 @@
+{
+  "env_file": {
+    "exists": true,
+    "keys": [
+      "CREATOR_BID_API_KEY",
+      "DATABASE_URL",
+      "ENVIRONMENT",
+      "GEMINI_API_KEY",
+      "LUNARCRUSH_API_KEY"
+    ]
+  },
+  "env_local": {
+    "exists": true,
+    "keys": [
+      "CREATOR_BID_API_KEY",
+      "DATABASE_URL",
+      "ENVIRONMENT",
+      "GEMINI_API_KEY",
+      "LUNARCRUSH_API_KEY"
+    ]
+  },
+  "env_example": {
+    "exists": true,
+    "keys": [
+      "CLOUDFLARE_ACCOUNT_ID",
+      "CLOUDFLARE_API_TOKEN",
+      "CLOUDFLARE_D1_DATABASE_ID",
+      "ENVIRONMENT",
+      "GEMINI_API_KEY",
+      "LUNARCRUSH_API_KEY"
+    ]
+  }
+}

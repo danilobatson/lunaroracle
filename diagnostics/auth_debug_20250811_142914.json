@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-08-11T21:29:14Z",
+  "deployment_url": "https://lunaroracle-dsl8nvmn8-danilobatsons-projects.vercel.app",
+  "authentication_tests": {
+    "no_auth": {
+      "status": "401",
+      "response": " "
+    },
+    "bearer_token": {
+      "status": "401",
+      "response": " "
+    },
+    "api_key_header": {
+      "status": "401",
+      "response": " "
+    }
+  },
+  "file_structure": {
+    "health_route_exists": false,
+    "topic_route_exists": true,
+    "lib_directory_exists": true,
+    "lunarcrush_service_exists": true
+  },
+  "lunarcrush_sdk_usage": "    "lunarcrush-sdk": "latest",
+  "keywords": ["crypto", "ai", "predictions", "social-sentiment", "lunarcrush", "nextjs"],",
+  "issues_identified": [
+    "All endpoints returning 401",
+    "Need to verify API route implementation",
+    "Check if LunarCrush SDK properly configured",
+    "Verify environment variables in routes"
+  ]
+}

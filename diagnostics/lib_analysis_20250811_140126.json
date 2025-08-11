@@ -1,0 +1,21 @@
+{
+  "lib_directory_exists": true,
+  "files": [
+    "src/lib/cloudflare-d1.ts",
+    "src/lib/database-fallback.ts",
+    "src/lib/database-interface.ts",
+    "src/lib/gemini.ts",
+    "src/lib/get-database.ts",
+    "src/lib/index.ts",
+    "src/lib/lunarcrush.ts",
+    "src/lib/prediction-engine.ts",
+    "src/lib/types.ts"
+  ],
+  "lib_checks": {
+    "types": "EXISTS",
+    "lunarcrush": "EXISTS",
+    "gemini": "EXISTS",
+    "cloudflare_d1": "EXISTS",
+    "prediction_engine": "EXISTS"
+  }
+}

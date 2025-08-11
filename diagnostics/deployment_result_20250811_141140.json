@@ -1,0 +1,8 @@
+{
+  "timestamp": "2025-08-11T21:12:09Z",
+  "deployment_status": "FAILED",
+  "deployment_url": null,
+  "build_exit_code": 0,
+  "deploy_exit_code": 1,
+  "error_log": "See deployment.log"
+}
