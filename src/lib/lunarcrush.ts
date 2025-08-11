@@ -1,108 +1,115 @@
+import { createLunarCrushMCP } from 'lunarcrush-sdk';
 import { LunarCrushMetrics, SocialPost } from '../types';
-
-// Note: Using fetch approach for now as lunarcrush-sdk may need MCP setup
-// We'll integrate the full SDK when we have MCP configured
 
 export class LunarCrushService {
   private apiKey: string;
-  private baseUrl = 'https://lunarcrush.com/api4';
+  private mcp: any = null;
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
   }
 
+  private async initMCP() {
+    if (!this.mcp) {
+      this.mcp = await createLunarCrushMCP(this.apiKey);
+    }
+    return this.mcp;
+  }
+
   async getTopicData(symbol: string): Promise<LunarCrushMetrics> {
     try {
-      const response = await fetch(`${this.baseUrl}/public/topic/${symbol}`, {
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`LunarCrush API error: ${response.statusText}`);
-      }
-
-      const data = await response.json() as any;
+      const mcp = await this.initMCP();
       
-      // Handle both direct response and nested data structure
-      const topicData = data.data || data;
+      // Use the SDK's topic method for full topic details
+      const topicData = await mcp.topics(symbol);
+      
+      // Parse the response - SDK returns structured data
+      const data = topicData.data?.[0] || topicData;
       
       return {
-        symbol: topicData.symbol || symbol,
-        galaxy_score: topicData.galaxy_score || topicData.gs || 75, // Mock data for testing
-        social_dominance: topicData.social_dominance || topicData.sd || 8.5,
-        sentiment: topicData.sentiment || topicData.ss || 68,
-        posts_active: topicData.posts_active || topicData.pa || 450,
-        contributors_active: topicData.contributors_active || topicData.ca || 125,
-        interactions: topicData.interactions || topicData.i || 15000,
-        price: topicData.close || topicData.price || topicData.p || 45000,
-        percent_change_24h: topicData.percent_change_24h || topicData.pc24h || 2.5,
+        symbol: data.symbol || symbol,
+        galaxy_score: data.galaxy_score || data.gs || 0,
+        social_dominance: data.social_dominance || data.sd || 0,
+        sentiment: data.sentiment || data.ss || 50,
+        posts_active: data.posts_active || data.pa || 0,
+        contributors_active: data.contributors_active || data.ca || 0,
+        interactions: data.interactions || data.i || 0,
+        price: data.close || data.price || data.p || 0,
+        percent_change_24h: data.percent_change_24h || data.pc24h || 0,
       };
     } catch (error) {
-      console.error('Error fetching topic data:', error);
-      
-      // Return mock data for testing if API fails
-      return {
-        symbol: symbol,
-        galaxy_score: 75,
-        social_dominance: 8.5,
-        sentiment: 68,
-        posts_active: 450,
-        contributors_active: 125,
-        interactions: 15000,
-        price: 45000,
-        percent_change_24h: 2.5,
-      };
+      console.error('Error fetching topic data with SDK:', error);
+      throw error;
     }
   }
 
   async getTopicPosts(symbol: string, interval: string = '24h'): Promise<SocialPost[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/public/topic/${symbol}/posts/${interval}`, {
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`LunarCrush API error: ${response.statusText}`);
-      }
-
-      const data = await response.json() as any;
-      const posts = data.data || [];
+      const mcp = await this.initMCP();
+      
+      // Use SDK's topicPosts method
+      const postsData = await mcp.topicPosts(symbol, { interval });
+      const posts = postsData.data || [];
       
       return posts.map((post: any) => ({
         id: post.id || Math.random().toString(),
-        text: post.text || 'Sample social post',
-        sentiment: post.sentiment || 65,
-        interactions: post.interactions || 100,
-        created_time: post.created_time || new Date().toISOString(),
-        user_followers: post.user_followers || 1000,
+        text: post.text || post.content || '',
+        sentiment: post.sentiment || 50,
+        interactions: post.interactions || post.likes || post.retweets || 0,
+        created_time: post.created_time || post.created_at || new Date().toISOString(),
+        user_followers: post.user_followers || post.followers || 0,
       }));
     } catch (error) {
-      console.error('Error fetching topic posts:', error);
+      console.error('Error fetching topic posts with SDK:', error);
       return [];
     }
   }
 
   async getTimeSeries(symbol: string, interval: string = '1w'): Promise<any[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/public/topic/${symbol}/time-series/${interval}`, {
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`LunarCrush API error: ${response.statusText}`);
-      }
-
-      const data = await response.json() as any;
-      return data.data || [];
+      const mcp = await this.initMCP();
+      
+      // Use SDK's timeSeries method - returns TSV format
+      const timeSeriesData = await mcp.timeSeries(symbol, { interval });
+      
+      // Parse TSV data if needed, or return as-is
+      return timeSeriesData.data || [];
     } catch (error) {
-      console.error('Error fetching time series:', error);
+      console.error('Error fetching time series with SDK:', error);
       return [];
+    }
+  }
+
+  async getCryptocurrencies(options: any = {}): Promise<any[]> {
+    try {
+      const mcp = await this.initMCP();
+      
+      // Use SDK's cryptocurrencies method for market data
+      const cryptoData = await mcp.cryptocurrencies(options);
+      return cryptoData.data || [];
+    } catch (error) {
+      console.error('Error fetching cryptocurrencies with SDK:', error);
+      return [];
+    }
+  }
+
+  async searchTopics(query: string): Promise<any[]> {
+    try {
+      const mcp = await this.initMCP();
+      
+      // Use SDK's universal search
+      const searchData = await mcp.search(query);
+      return searchData.data || [];
+    } catch (error) {
+      console.error('Error searching topics with SDK:', error);
+      return [];
+    }
+  }
+
+  async close(): Promise<void> {
+    if (this.mcp) {
+      await this.mcp.close();
+      this.mcp = null;
     }
   }
 }
