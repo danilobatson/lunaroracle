@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface ChatRequest {
+  message: string;
+  userId?: string;
+}
+
+interface ChatResponse {
+  response: string;
+  userId: string;
+  timestamp: string;
+  status: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body: ChatRequest = await request.json();
     const { message, userId } = body;
 
     if (!message) {
@@ -14,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     // For now, return a simple response
     // TODO: Implement actual AI agent logic
-    const response = {
+    const response: ChatResponse = {
       response: `I received your message about: "${message}". As LunarOracle, I'm analyzing crypto market data to provide insights.`,
       userId: userId || 'anonymous',
       timestamp: new Date().toISOString(),

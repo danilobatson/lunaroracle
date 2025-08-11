@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface PredictionRequest {
+  cryptoSymbol: string;
+  timeframe?: number;
+}
+
+interface PredictionResponse {
+  symbol: string;
+  timeframe: number;
+  prediction: string;
+  confidence: number;
+  reasoning: string;
+  timestamp: string;
+  status: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body: PredictionRequest = await request.json();
     const { cryptoSymbol, timeframe } = body;
 
     if (!cryptoSymbol) {
@@ -25,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // For now, return a simple mock prediction
     // TODO: Implement actual AI prediction logic
-    const prediction = {
+    const prediction: PredictionResponse = {
       symbol: cryptoSymbol,
       timeframe: timeframe || 24,
       prediction: 'bullish',
