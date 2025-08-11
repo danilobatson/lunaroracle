@@ -1,113 +1,147 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GeminiPredictionOutput } from "./types";
 
 export class GeminiService {
-  public model: any;
   private genAI: GoogleGenerativeAI;
+  private model: any;
 
   constructor(apiKey: string) {
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ 
-      model: "gemini-1.5-pro",
-      generationConfig: {
-        temperature: 0.3,
-        topK: 10,
-        topP: 0.8,
-        maxOutputTokens: 1500,
-      }
-    });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   }
 
-  async generatePrediction(input: any): Promise<GeminiPredictionOutput> {
-    const prompt = buildIntelligentPredictionPrompt(input);
-    
+  // Analyze crypto data and generate prediction
+  async generatePrediction(symbol: string, socialData: any): Promise<{
+    prediction: 'bullish' | 'bearish' | 'neutral';
+    confidence: number;
+    reasoning: string;
+  }> {
     try {
+      // Safely extract data using actual LunarCrush properties
+      const price = socialData?.price || 'unknown';
+      const change24h = socialData?.percent_change_24h || 0;
+      const change7d = socialData?.percent_change_7d || 0;
+      const galaxyScore = socialData?.galaxy_score || 'unknown';
+      const altRank = socialData?.alt_rank || 'unknown';
+      const marketCapRank = socialData?.market_cap_rank || 'unknown';
+      const volatility = socialData?.volatility || 'unknown';
+      const volume24h = socialData?.volume_24h || 'unknown';
+      const marketCap = socialData?.market_cap || 'unknown';
+
+      const prompt = `
+You are LunarOracle, an expert crypto analyst. Analyze this real social and market data for ${symbol} and provide a prediction.
+
+Data:
+- Price: $${price}
+- 24h Change: ${change24h}%
+- 7d Change: ${change7d}%
+- Galaxy Score: ${galaxyScore}/100 (social intelligence score)
+- Alt Rank: ${altRank} (lower is better)
+- Market Cap Rank: ${marketCapRank}
+- Volatility: ${volatility}
+- Volume 24h: $${volume24h}
+- Market Cap: $${marketCap}
+
+Provide your analysis in this exact JSON format:
+{
+  "prediction": "bullish|bearish|neutral",
+  "confidence": 0.XX,
+  "reasoning": "Your detailed analysis based on the data"
+}
+
+Focus on price momentum, market position, and galaxy score trends. Be specific about why the data supports your prediction.`;
+
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
-      // Parse JSON response, handling markdown formatting
-      const cleanedText = parseJSONFromMarkdown(text);
-      const prediction = JSON.parse(cleanedText);
-      
+
+      // Try to parse JSON response
+      try {
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          return {
+            prediction: parsed.prediction,
+            confidence: Math.min(Math.max(parsed.confidence, 0), 1), // Ensure 0-1 range
+            reasoning: parsed.reasoning
+          };
+        }
+      } catch (parseError) {
+        console.warn('Could not parse JSON from Gemini response, using fallback');
+      }
+
+      // Fallback if JSON parsing fails
       return {
-        prediction: prediction.prediction,
-        confidence: prediction.confidence,
-        targetChange: prediction.targetChange,
-        reasoning: prediction.reasoning,
-        keyFactors: prediction.keyFactors || [],
-        riskFactors: prediction.riskFactors || [],
+        prediction: 'neutral' as const,
+        confidence: 0.5,
+        reasoning: text || 'Analysis generated but formatting issue occurred'
       };
+
     } catch (error) {
-      console.error('Error generating prediction:', error);
-      throw error;
+      console.error('Gemini prediction error:', error);
+      throw new Error(`Failed to generate AI prediction: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  // Generate chat response based on user message and crypto context
+  async generateChatResponse(message: string, cryptoContext?: any): Promise<string> {
+    try {
+      let prompt = `
+You are LunarOracle, an expert crypto analyst AI. Respond to this user message: "${message}"
+
+Your personality:
+- Expert in cryptocurrency markets and social sentiment analysis
+- Use real data and insights when possible
+- Be helpful, informative, and engaging
+- Keep responses concise but insightful
+- Reference specific metrics when relevant
+
+`;
+
+      if (cryptoContext && cryptoContext.topCryptos) {
+        prompt += `
+Current market context you can reference:
+- Popular cryptos: ${cryptoContext.topCryptos}
+- Market sentiment: Generally positive based on recent data
+- Use specific data points when they're relevant to the user's question
+
+`;
+      }
+
+      prompt += `
+Respond naturally as LunarOracle. If the user asks about specific cryptocurrencies, provide insights based on social sentiment and market data.`;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+
+    } catch (error) {
+      console.error('Gemini chat error:', error);
+      throw new Error(`Failed to generate chat response: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  // Health check for Gemini service
+  async healthCheck(): Promise<boolean> {
+    try {
+      const result = await this.model.generateContent('Hello, respond with just "OK"');
+      const response = await result.response;
+      return response.text().includes('OK');
+    } catch (error) {
+      console.error('Gemini health check failed:', error);
+      return false;
     }
   }
 }
 
-// Modern function syntax - let the LLM do the analysis!
-const buildIntelligentPredictionPrompt = (input: any): string => {
-  const { 
-    cryptoSymbol, 
-    socialData, 
-    historicalAccuracy, 
-    timeframe, 
-    recentPostsCount, 
-    recentPosts 
-  } = input;
-  
-  // Include sample posts for richer context
-  const samplePostsText = recentPosts?.length > 0 
-    ? `\nRECENT SAMPLE POSTS:\n${recentPosts.map((post: any, i: number) => 
-        `${i + 1}. "${post.text}" (${post.interactions} interactions)`
-      ).join('\n')}`
-    : '';
+// Factory function
+export function createGeminiService(apiKey?: string): GeminiService {
+  const key = apiKey || process.env.GEMINI_API_KEY;
 
-  return `You are LunarOracle, an expert crypto prediction AI. Analyze this comprehensive social sentiment data for ${cryptoSymbol.toUpperCase()} and make an intelligent prediction.
+  if (!key) {
+    throw new Error('Gemini API key is required. Set GEMINI_API_KEY environment variable.');
+  }
 
-SOCIAL DATA ANALYSIS:
-- Galaxy Score: ${socialData.galaxy_score}/100 (proprietary LunarCrush metric combining price performance, social volume, and market correlation)
-- Social Dominance: ${socialData.social_dominance}% (share of total crypto social conversations)
-- Sentiment: ${socialData.sentiment}% (bullish vs bearish from actual social posts)
-- Current Price: $${socialData.price}
-- 24h Change: ${socialData.percent_change_24h}%
-- Social Volume: ${socialData.posts_active} mentions, ${socialData.interactions} total interactions
-- Active Creators: ${socialData.contributors_active} unique accounts posting
-- Posts in last 24h: ${recentPostsCount}${samplePostsText}
-
-YOUR ANALYSIS TASK:
-Intelligently analyze ALL these metrics together. Consider:
-1. **Galaxy Score patterns**: What does this score suggest about momentum?
-2. **Social Dominance**: Is this high/low relative to market cap? What does it indicate?
-3. **Sentiment vs Reality**: Does sentiment align with price action? Any disconnects?
-4. **Volume Quality**: High interactions per post = quality engagement
-5. **Creator Activity**: Are influencers talking about this asset?
-6. **Recent Posts**: What themes emerge from actual social content?
-
-PREDICTION GUIDELINES:
-- Historical accuracy for this asset: ${historicalAccuracy}%
-- Timeframe: ${timeframe} hours
-- Only predict if confidence ≥ 65%
-- Consider macro crypto market conditions
-- Weight social signals appropriately - don't overfit to one metric
-- Think about contrarian vs momentum plays
-
-Analyze these signals intelligently and provide your prediction:
-
-{
-  "prediction": "bullish|bearish|neutral",
-  "confidence": 75,
-  "targetChange": 5.2,
-  "reasoning": "Clear, intelligent analysis based on the social data patterns you observed",
-  "keyFactors": ["Specific social signals that drove your decision"],
-  "riskFactors": ["What could invalidate this prediction"]
+  return new GeminiService(key);
 }
 
-Respond with ONLY the JSON object - no markdown formatting.`;
-};
-
-// Utility function with arrow syntax
-const parseJSONFromMarkdown = (text: string): string => {
-  const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  return jsonMatch ? jsonMatch[1].trim() : text.trim();
-};
+export default createGeminiService;

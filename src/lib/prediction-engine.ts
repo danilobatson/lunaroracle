@@ -1,4 +1,5 @@
 import { createLunarCrushService } from './lunarcrush';
+import { createGeminiService } from './gemini';
 
 interface PredictionRequest {
   cryptoSymbol: string;
@@ -11,36 +12,54 @@ interface PredictionResult {
   prediction: 'bullish' | 'bearish' | 'neutral';
   confidence: number;
   reasoning: string;
-  socialMetrics?: any;
+  socialMetrics: any;
   timestamp: string;
+  source: 'ai_analysis';
 }
 
 export class PredictionEngine {
   private lunarCrush: ReturnType<typeof createLunarCrushService>;
+  private gemini: ReturnType<typeof createGeminiService>;
 
   constructor() {
     this.lunarCrush = createLunarCrushService();
+    this.gemini = createGeminiService();
   }
 
   async generatePrediction(request: PredictionRequest): Promise<PredictionResult> {
     try {
       const { cryptoSymbol, timeframe } = request;
 
-      console.log(`Generating prediction for ${cryptoSymbol} over ${timeframe} hours`);
+      console.log(`🤖 Generating AI prediction for ${cryptoSymbol} over ${timeframe} hours`);
 
-      // Get real social data from LunarCrush SDK using correct method
+      // Get real social data from LunarCrush SDK
       const socialDataResult = await this.lunarCrush.getTopic(cryptoSymbol);
+      const socialData = socialDataResult?.data;
 
-      // For now, create a simple prediction based on the data
-      // TODO: Implement actual AI/ML prediction logic with Gemini
+      if (!socialData) {
+        throw new Error('No social data available for prediction');
+      }
+
+      console.log(`📊 Got social data for ${cryptoSymbol}:`, {
+        price: socialData.price || 'unknown',
+        galaxy_score: socialData.galaxy_score || 'unknown',
+        name: socialData.name || 'unknown'
+      });
+
+      // Generate real AI prediction using Gemini
+      const aiPrediction = await this.gemini.generatePrediction(cryptoSymbol, socialData);
+
+      console.log(`🧠 AI prediction generated:`, aiPrediction);
+
       const prediction: PredictionResult = {
         symbol: cryptoSymbol,
         timeframe,
-        prediction: 'bullish', // Mock prediction for now
-        confidence: 0.75,
-        reasoning: `Based on social sentiment analysis from LunarCrush data for ${cryptoSymbol}`,
-        socialMetrics: socialDataResult.data,
-        timestamp: new Date().toISOString()
+        prediction: aiPrediction.prediction,
+        confidence: aiPrediction.confidence,
+        reasoning: aiPrediction.reasoning,
+        socialMetrics: socialData,
+        timestamp: new Date().toISOString(),
+        source: 'ai_analysis'
       };
 
       return prediction;
@@ -48,22 +67,34 @@ export class PredictionEngine {
     } catch (error) {
       console.error('Prediction engine error:', error);
 
-      // Return fallback prediction if LunarCrush fails
+      // If AI fails, still try to get social data for context
+      let socialData = null;
+      try {
+        const socialDataResult = await this.lunarCrush.getTopic(request.cryptoSymbol);
+        socialData = socialDataResult?.data || null;
+      } catch (socialError) {
+        console.error('Could not fetch social data for fallback:', socialError);
+      }
+
+      // Return error prediction with any available data
       return {
         symbol: request.cryptoSymbol,
         timeframe: request.timeframe,
         prediction: 'neutral',
         confidence: 0.5,
-        reasoning: 'Unable to fetch social data, using fallback prediction',
-        timestamp: new Date().toISOString()
+        reasoning: `Unable to generate AI prediction: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`,
+        socialMetrics: socialData,
+        timestamp: new Date().toISOString(),
+        source: 'ai_analysis'
       };
     }
   }
 
   async healthCheck(): Promise<boolean> {
     try {
-      await this.lunarCrush.healthCheck();
-      return true;
+      const lunarCrushOK = await this.lunarCrush.healthCheck();
+      const geminiOK = await this.gemini.healthCheck();
+      return lunarCrushOK && geminiOK;
     } catch (error) {
       console.error('Prediction engine health check failed:', error);
       return false;
@@ -71,7 +102,6 @@ export class PredictionEngine {
   }
 }
 
-// Export factory function
 export function createPredictionEngine(): PredictionEngine {
   return new PredictionEngine();
 }
