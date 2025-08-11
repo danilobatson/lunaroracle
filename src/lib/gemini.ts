@@ -24,7 +24,10 @@ export class GeminiService {
     try {
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
-      const text = response.text();
+      let text = response.text();
+      
+      // Strip markdown code blocks if present
+      text = text.replace(/```json\s*|\s*```/g, '').trim();
       
       // Parse JSON response from Gemini
       const prediction = JSON.parse(text);
@@ -67,7 +70,7 @@ Provide a prediction with:
 5. Key factors: Array of main bullish/bearish indicators
 6. Risk factors: Array of what could invalidate this prediction
 
-Respond ONLY with valid JSON in this exact format:
+Respond ONLY with valid JSON (no markdown formatting):
 {
   "prediction": "bullish|bearish|neutral",
   "confidence": 75,

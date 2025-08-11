@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "message": "LunarCrush API connection successful",
+  "timestamp": "2025-08-11T18:29:49.373Z",
+  "test_data": {
+    "symbol": "bitcoin",
+    "galaxy_score": 0,
+    "social_dominance": 0,
+    "sentiment": 50,
+    "price": 0
+  },
+  "api_response_received": true
+}

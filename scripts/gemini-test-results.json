@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "message": "Gemini AI connection and prediction generation successful",
+  "timestamp": "2025-08-11T18:29:46.189Z",
+  "test_prediction": {
+    "prediction": "bullish",
+    "confidence": 75,
+    "reasoning": "A Galaxy Score of 75 suggests strong positive on-chain activity. Combined with a Social Dominance of 8.5% indicating significant social interest and a positive sentiment of 68, these factors suggest upward price pressure in the short term."
+  },
+  "raw_response": "```json\n{\n  \"prediction\": \"bullish\",\n  \"confidence\": 75,\n  \"reasoning\": \"A Galaxy Score of 75 suggests strong positive on-chain activity. Combined with a Social Dominance of 8.5% indicating significant social interest and a positive sentiment of 68, these factors suggest upward price pressure in the short term.\"\n}\n```\n",
+  "cleaned_response": "{\n  \"prediction\": \"bullish\",\n  \"confidence\": 75,\n  \"reasoning\": \"A Galaxy Score of 75 suggests strong positive on-chain activity. Combined with a Social Dominance of 8.5% indicating significant social interest and a positive sentiment of 68, these factors suggest upward price pressure in the short term.\"\n}",
+  "api_working": true,
+  "json_parsing_fixed": true
+}

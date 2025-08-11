@@ -2,19 +2,8 @@ require('dotenv').config();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const fs = require('fs');
 
-function parseJSONFromMarkdown(text) {
-  // Remove markdown code blocks if present
-  const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  if (jsonMatch) {
-    return jsonMatch[1].trim();
-  }
-  
-  // If no markdown blocks, return the text as-is
-  return text.trim();
-}
-
 async function testGemini() {
-  console.log('🤖 Testing Gemini AI connection...');
+  console.log('🤖 Testing Gemini AI connection (with JSON parsing fix)...');
   
   try {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -46,19 +35,19 @@ Respond ONLY with valid JSON (no markdown formatting):
     
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    const text = response.text();
+    let text = response.text();
+    
+    // Strip markdown code blocks if present
+    text = text.replace(/```json\s*|\s*```/g, '').trim();
     
     console.log('Raw AI response:', text);
     
-    // Parse JSON handling markdown formatting
-    const cleanedText = parseJSONFromMarkdown(text);
-    console.log('Cleaned JSON:', cleanedText);
-    
+    // Try to parse the JSON response
     let parsedPrediction;
     try {
-      parsedPrediction = JSON.parse(cleanedText);
+      parsedPrediction = JSON.parse(text);
     } catch (parseError) {
-      throw new Error(`Failed to parse AI response as JSON: ${cleanedText}`);
+      throw new Error(`Failed to parse AI response as JSON: ${text}`);
     }
     
     const testResult = {
@@ -67,7 +56,6 @@ Respond ONLY with valid JSON (no markdown formatting):
       timestamp: new Date().toISOString(),
       test_prediction: parsedPrediction,
       raw_response: text,
-      cleaned_response: cleanedText,
       api_working: true,
       json_parsing_fixed: true
     };
