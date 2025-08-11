@@ -1,7 +1,0 @@
-{
-  "success": false,
-  "error": "Command failed: npx tsc --noEmit --pretty",
-  "stderr": "",
-  "stdout": "\u001b[91merror\u001b[0m\u001b[90m TS2688: \u001b[0mCannot find type definition file for '@cloudflare/workers-types'.\n  The file is in the program because:\n    Entry point of type library '@cloudflare/workers-types' specified in compilerOptions\n\n  \u001b[96mtsconfig.json\u001b[0m:\u001b[93m7\u001b[0m:\u001b[93m15\u001b[0m\n    \u001b[7m7\u001b[0m     \"types\": [\"@cloudflare/workers-types\", \"@types/jest\"],\n    \u001b[7m \u001b[0m \u001b[96m              ~~~~~~~~~~~~~~~~~~~~~~~~~~~\u001b[0m\n    File is entry point of type library specified here.\n\n\u001b[91merror\u001b[0m\u001b[90m TS2688: \u001b[0mCannot find type definition file for '@types/jest'.\n  The file is in the program because:\n    Entry point of type library '@types/jest' specified in compilerOptions\n\n  \u001b[96mtsconfig.json\u001b[0m:\u001b[93m7\u001b[0m:\u001b[93m44\u001b[0m\n    \u001b[7m7\u001b[0m     \"types\": [\"@cloudflare/workers-types\", \"@types/jest\"],\n    \u001b[7m \u001b[0m \u001b[96m                                           ~~~~~~~~~~~~~\u001b[0m\n    File is entry point of type library specified here.\n\n\nFound 2 errors.\n\n",
-  "timestamp": "2025-08-11T18:11:04.822Z"
-}
