@@ -1,7 +1,0 @@
-{
-  "node_modules": "EXISTS",
-  "build_exit_code": 0,
-  "build_output": "   Collecting build traces ...  Route (app)                              Size     First Load JS ┌ ○ /                                    138 B          87.2 kB ├ ○ /_not-found                          873 B            88 kB ├ ƒ /api/agent/chat                      0 B                0 B ├ ƒ /api/predict                         0 B                0 B ├ ƒ /api/predictions                     0 B                0 B ├ ƒ /api/predictions/[symbol]            0 B                0 B └ ƒ /api/topic/[symbol]                  0 B                0 B + First Load JS shared by all            87.1 kB   ├ chunks/117-fc52a35b247cd1ab.js       31.6 kB   ├ chunks/fd9d1056-749e5812300142af.js  53.6 kB   └ other shared chunks (total)          1.86 kB   ○  (Static)   prerendered as static content ƒ  (Dynamic)  server-rendered on demand  Done in 15.23s. ",
-  "tsc_exit_code": 0,
-  "tsc_output": "yarn run v1.22.22 $ /Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/node_modules/.bin/tsc --noEmit Done in 2.45s. "
-}

@@ -1,0 +1,9 @@
+{
+    "timestamp": "2025-08-11T22:44:32Z",
+    "env_files": {
+        ".env.local_exists": true,
+        ".env_exists": true,
+        ".env.example_exists": true
+    },
+    "environment_variables": {    }
+}

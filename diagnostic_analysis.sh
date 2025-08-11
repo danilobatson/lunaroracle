@@ -1,8 +1,3 @@
-# Navigate to your project directory (update the path as needed)
-cd /Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle
-
-# Create and run the diagnostic script
-cat > diagnostic_analysis.sh << 'EOF'
 #!/bin/bash
 
 # LunarOracle Comprehensive Diagnostic Script
@@ -340,8 +335,3 @@ echo "cat diagnostics/build_status.json"
 echo "cat diagnostics/git_status.json"
 echo ""
 echo "✅ Ready for enhancement planning!"
-EOF
-
-# Make it executable and run
-chmod +x diagnostic_analysis.sh
-./diagnostic_analysis.sh

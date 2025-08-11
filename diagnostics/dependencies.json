@@ -1,6 +1,13 @@
 {
+    "timestamp": "2025-08-11T22:44:32Z",
+    "package_manager": "yarn",
+    "node_version": "v20.12.2",
+    "yarn_version": "1.22.22",
+    "package_json": {
   "name": "lunaroracle",
   "version": "0.3.0",
+  "description": "LunarOracle: AI agent that predicts crypto price movements using social sentiment data",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -24,6 +31,10 @@
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.0.0"
   },
-  "devDependencies": null,
-  "engines": null
+  "keywords": ["crypto", "ai", "predictions", "social-sentiment", "lunarcrush", "nextjs"],
+  "author": "Danilo Batson",
+  "license": "MIT"
+},
+    "lock_file_exists": true,
+    "node_modules_exists": true
 }

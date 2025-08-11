@@ -1,0 +1,53 @@
+yarn run v1.22.22
+$ next build
+ ⚠ Invalid next.config.js options detected: 
+ ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
+ ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+  ▲ Next.js 14.2.31
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/9) ...
+   Generating static pages (2/9) 
+Cryptocurrencies route error: B [Error]: Dynamic server usage: Route /api/cryptocurrencies couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at u (/Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/.next/server/app/api/cryptocurrencies/route.js:1:808)
+    at /Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/batson/node_modules/@opentelemetry/api/build/src/context/NoopContextManager.js:25:19)
+    at ContextAPI.with (/Users/batson/node_modules/@opentelemetry/api/build/src/api/context.js:60:46)
+    at NoopTracer.startActiveSpan (/Users/batson/node_modules/@opentelemetry/api/build/src/trace/NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (/Users/batson/node_modules/@opentelemetry/api/build/src/trace/ProxyTracer.js:36:24)
+    at /Users/batson/Desktop/ForTheNerds/CreatorBid/lunaroracle/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/cryptocurrencies couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
+ ✓ Generating static pages (9/9)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    138 B          87.2 kB
+├ ○ /_not-found                          873 B            88 kB
+├ ƒ /api/agent/chat                      0 B                0 B
+├ ƒ /api/cryptocurrencies                0 B                0 B
+├ ○ /api/health                          0 B                0 B
+├ ƒ /api/predict                         0 B                0 B
+├ ○ /api/predictions                     0 B                0 B
+└ ƒ /api/topic/[symbol]                  0 B                0 B
++ First Load JS shared by all            87.1 kB
+  ├ chunks/117-fc52a35b247cd1ab.js       31.6 kB
+  ├ chunks/fd9d1056-749e5812300142af.js  53.6 kB
+  └ other shared chunks (total)          1.86 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Done in 14.48s.

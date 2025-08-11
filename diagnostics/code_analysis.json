@@ -1,0 +1,91 @@
+{
+    "timestamp": "2025-08-11T22:44:32Z",
+    "typescript_config": {
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "target": "ES2017"
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+},
+    "next_config": "exists"
+"exists",
+    "tailwind_config": "exists"
+"exists",
+    "api_routes_count": 6,
+    "lib_services": [
+        {
+            "file": "src/lib/types.ts",
+            "name": "types.ts",
+            "exports": [
+                "export interface PredictionRequest {",
+                "export interface PredictionResponse {",
+                "export interface LunarCrushMetrics {",
+                "export interface SocialPost {",
+                "export interface GeminiPredictionInput {",
+                "export interface GeminiPredictionOutput {",
+                "export interface DbPrediction {",
+                "export interface DbSocialMetrics {",
+                "export interface AgentResponse {",
+                "export interface CreatorBidMessage {"            ]
+        },
+        {
+            "file": "src/lib/lunarcrush.ts",
+            "name": "lunarcrush.ts",
+            "exports": [
+                "export class LunarCrushService {",
+                "export function createLunarCrushService(apiKey?: string): LunarCrushService {",
+                "export default createLunarCrushService;"            ]
+        },
+        {
+            "file": "src/lib/gemini.ts",
+            "name": "gemini.ts",
+            "exports": [
+                "export class GeminiService {",
+                "export function createGeminiService(apiKey?: string): GeminiService {",
+                "export default createGeminiService;"            ]
+        },
+        {
+            "file": "src/lib/prediction-engine.ts",
+            "name": "prediction-engine.ts",
+            "exports": [
+                "export class PredictionEngine {",
+                "export function createPredictionEngine(): PredictionEngine {",
+                "export default createPredictionEngine;"            ]
+        },
+        {
+            "file": "src/lib/index.ts",
+            "name": "index.ts",
+            "exports": [
+                "export interface PredictionRequest {",
+                "export interface PredictionResponse {",
+                "export interface LunarCrushMetrics {",
+                "export interface SocialPost {",
+                "export interface GeminiPredictionInput {",
+                "export interface GeminiPredictionOutput {",
+                "export interface DbPrediction {",
+                "export interface DbSocialMetrics {",
+                "export interface AgentResponse {",
+                "export interface CreatorBidMessage {"            ]
+        }    ]
+}

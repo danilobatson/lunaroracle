@@ -1,0 +1,7 @@
+{
+    "timestamp": "2025-08-11T22:44:48Z",
+    "build_success": true,
+    "exit_code": 0,
+    "build_output": "\nRoute (app)                              Size     First Load JS\n\u250c \u25cb /                                    138 B          87.2 kB\n\u251c \u25cb /_not-found                          873 B            88 kB\n\u251c \u0192 /api/agent/chat                      0 B                0 B\n\u251c \u0192 /api/cryptocurrencies                0 B                0 B\n\u251c \u25cb /api/health                          0 B                0 B\n\u251c \u0192 /api/predict                         0 B                0 B\n\u251c \u25cb /api/predictions                     0 B                0 B\n\u2514 \u0192 /api/topic/[symbol]                  0 B                0 B\n+ First Load JS shared by all            87.1 kB\n  \u251c chunks/117-fc52a35b247cd1ab.js       31.6 kB\n  \u251c chunks/fd9d1056-749e5812300142af.js  53.6 kB\n  \u2514 other shared chunks (total)          1.86 kB\n\n\n\u25cb  (Static)   prerendered as static content\n\u0192  (Dynamic)  server-rendered on demand\n\nDone in 14.48s.\n",
+    "build_directory_exists": true
+}
