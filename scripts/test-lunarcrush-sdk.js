@@ -2,49 +2,64 @@ require('dotenv').config();
 const fs = require('fs');
 
 async function testLunarCrushSDK() {
-  console.log('🌙 Testing LunarCrush SDK integration...');
-  
+  console.log('🌙 Testing LunarCrush SDK data structure...');
+
   try {
+    // Import the SDK
+    const { createLunarCrushMCP } = require('lunarcrush-sdk');
+
     const apiKey = process.env.LUNARCRUSH_API_KEY;
-    
     if (!apiKey) {
-      throw new Error('LUNARCRUSH_API_KEY not found in environment variables');
+      throw new Error('LUNARCRUSH_API_KEY not found');
     }
-    
-    // Test the LunarCrush MCP tools we have available
-    console.log('🔍 Testing available LunarCrush endpoints...');
-    
-    // Since we have LunarCrush MCP tools available, let's use those instead
-    // This is actually better than the SDK since it's already configured
-    
+
+    console.log('📡 Creating MCP connection...');
+    const mcp = await createLunarCrushMCP(apiKey);
+
+    console.log('📊 Fetching Bitcoin topic data...');
+    const topicData = await mcp.topics('bitcoin');
+
+    console.log('📱 Fetching Bitcoin posts...');
+    const postsData = await mcp.topicPosts('bitcoin', { interval: '1d' });
+
+    console.log('📈 Fetching Bitcoin time series...');
+    const timeSeriesData = await mcp.timeSeries('bitcoin', { interval: '1w' });
+
+    await mcp.close();
+
     const result = {
       success: true,
-      message: 'LunarCrush MCP tools available for data fetching',
+      message: 'LunarCrush SDK test successful',
       timestamp: new Date().toISOString(),
-      note: 'We have LunarCrush MCP tools available which provide better integration than raw API calls',
-      available_tools: [
-        'LunarCrush MCP:Topic - Get full details for crypto topics',
-        'LunarCrush MCP:Cryptocurrencies - Get sorted list of cryptocurrencies', 
-        'LunarCrush MCP:Topic_Time_Series - Get historical metrics',
-        'LunarCrush MCP:Topic_Posts - Get social posts'
-      ],
-      recommendation: 'Use MCP tools for actual data fetching in the worker'
+      topic_data_structure: typeof topicData === 'object' ? Object.keys(topicData) : 'not object',
+      posts_data_structure: typeof postsData === 'object' ? Object.keys(postsData) : 'not object',
+      time_series_structure: typeof timeSeriesData === 'object' ? Object.keys(timeSeriesData) : 'not object',
+      sample_topic_data: topicData,
+      sample_posts_count: postsData?.data?.length || 0,
+      sample_time_series_count: timeSeriesData?.data?.length || 0,
+      notes: [
+        'Sentiment will be calculated by Gemini AI from post content',
+        'LunarCrush provides raw social data and galaxy scores',
+        'We will analyze post text for sentiment using AI'
+      ]
     };
-    
-    console.log('✅ LunarCrush integration strategy confirmed');
-    console.log('📝 Note: We have LunarCrush MCP tools available which is better than SDK');
-    
-    fs.writeFileSync('scripts/lunarcrush-test-results.json', JSON.stringify(result, null, 2));
-    
+
+    console.log('✅ LunarCrush SDK test passed');
+    console.log(`   Topic data keys: ${Object.keys(topicData).join(', ')}`);
+    console.log(`   Posts fetched: ${postsData?.data?.length || 0}`);
+    console.log(`   Time series points: ${timeSeriesData?.data?.length || 0}`);
+
+    fs.writeFileSync('scripts/lunarcrush-sdk-test-results.json', JSON.stringify(result, null, 2));
+
   } catch (error) {
     const result = {
       success: false,
       error: error.message,
       timestamp: new Date().toISOString()
     };
-    
-    console.log('❌ LunarCrush test failed:', error.message);
-    fs.writeFileSync('scripts/lunarcrush-test-results.json', JSON.stringify(result, null, 2));
+
+    console.log('❌ LunarCrush SDK test failed:', error.message);
+    fs.writeFileSync('scripts/lunarcrush-sdk-test-results.json', JSON.stringify(result, null, 2));
   }
 }
 

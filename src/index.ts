@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import { LunarCrushService } from './lib/lunarcrush';
 import { GeminiService } from './lib/gemini';
 import { DatabaseService } from './lib/database';
-import { PredictionEngine } from './lib/prediction-engine';
+import { generatePrediction, generateAgentResponse } from './lib/prediction-engine';
 import { AgentResponse, PredictionRequest } from './types';
 
 // Cloudflare Worker bindings
@@ -29,7 +29,8 @@ app.get('/health', (c) => {
   return c.json({ 
     status: 'healthy', 
     service: 'LunarOracle API',
-    version: '0.1.0',
+    version: '0.2.0',
+    features: ['LLM-powered analysis', 'Real LunarCrush data', 'Modern ES6+ syntax'],
     timestamp: new Date().toISOString() 
   });
 });
@@ -54,7 +55,7 @@ app.get('/topic/:symbol', async (c) => {
   }
 });
 
-// Generate prediction endpoint
+// Generate prediction endpoint - now uses LLM-powered analysis
 app.post('/predict', async (c) => {
   try {
     const request = await c.req.json() as PredictionRequest;
@@ -64,10 +65,9 @@ app.post('/predict', async (c) => {
     const lunarCrush = new LunarCrushService(c.env.LUNARCRUSH_API_KEY);
     const gemini = new GeminiService(c.env.GEMINI_API_KEY);
     const database = new DatabaseService(c.env.DB);
-    const predictionEngine = new PredictionEngine(lunarCrush, gemini, database);
     
-    // Generate prediction
-    const prediction = await predictionEngine.generatePrediction(cryptoSymbol, timeframe);
+    // Generate prediction using LLM-powered analysis
+    const prediction = await generatePrediction(cryptoSymbol, timeframe, lunarCrush, gemini, database);
     
     // Cleanup
     await lunarCrush.close();
@@ -88,14 +88,21 @@ app.post('/agent/chat', async (c) => {
   try {
     const { message, userId } = await c.req.json();
     
+    // Extract crypto symbol from message (simple approach)
+    const cryptoRegex = /\b(bitcoin|btc|ethereum|eth|solana|sol|cardano|ada|xrp|ripple|dogecoin|doge|polygon|matic|chainlink|link|litecoin|ltc|avalanche|avax|polkadot|dot|uniswap|uni|cosmos|atom|filecoin|fil|algorand|algo|tezos|xtz|monero|xmr|eos|stellar|xlm|vechain|vet|theta|iota|neo|maker|mkr|compound|comp|aave|sushi|yearn|yfi|synthetix|snx|uma|ren|kyber|knc|bancor|bnt|loopring|lrc|balancer|bal|curve|crv|1inch)\b/i;
+    const match = message.match(cryptoRegex);
+    const cryptoSymbol = match ? match[1].toLowerCase() : undefined;
+    
     // Initialize services
     const lunarCrush = new LunarCrushService(c.env.LUNARCRUSH_API_KEY);
     const gemini = new GeminiService(c.env.GEMINI_API_KEY);
     const database = new DatabaseService(c.env.DB);
     
-    // Process agent response (to be implemented)
+    // Generate intelligent agent response
+    const responseText = await generateAgentResponse(message, lunarCrush, gemini, database, cryptoSymbol);
+    
     const response: AgentResponse = {
-      message: `🔮 LunarOracle here! You asked: "${message}". Let me analyze the crypto social sentiment...`,
+      message: responseText,
       confidence: 85,
       emoji: '🔮',
       timestamp: new Date()
