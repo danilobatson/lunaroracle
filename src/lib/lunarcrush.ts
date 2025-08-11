@@ -1,8 +1,36 @@
 import { LunarCrushMetrics, SocialPost } from '../types';
 
+// Type the LunarCrush API responses
+interface LunarCrushApiResponse {
+  symbol?: string;
+  galaxy_score?: number;
+  social_dominance?: number;
+  sentiment?: number;
+  posts_active?: number;
+  contributors_active?: number;
+  interactions?: number;
+  close?: number;
+  percent_change_24h?: number;
+}
+
+interface LunarCrushPostsResponse {
+  data?: Array<{
+    id: string;
+    text: string;
+    sentiment?: number;
+    interactions?: number;
+    created_time: string;
+    user_followers?: number;
+  }>;
+}
+
+interface LunarCrushTimeSeriesResponse {
+  data?: any[];
+}
+
 export class LunarCrushService {
   private apiKey: string;
-  private baseUrl = 'https://lunarcrush.com/api4'\;
+  private baseUrl = 'https://lunarcrush.com/api4';
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
@@ -20,8 +48,8 @@ export class LunarCrushService {
         throw new Error(`LunarCrush API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      
+      const data = await response.json() as LunarCrushApiResponse;
+
       return {
         symbol: data.symbol || symbol,
         galaxy_score: data.galaxy_score || 0,
@@ -51,9 +79,9 @@ export class LunarCrushService {
         throw new Error(`LunarCrush API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      
-      return data.data?.map((post: any) => ({
+      const data = await response.json() as LunarCrushPostsResponse;
+
+      return data.data?.map((post) => ({
         id: post.id,
         text: post.text,
         sentiment: post.sentiment || 50,
@@ -79,7 +107,7 @@ export class LunarCrushService {
         throw new Error(`LunarCrush API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as LunarCrushTimeSeriesResponse;
       return data.data || [];
     } catch (error) {
       console.error('Error fetching time series:', error);

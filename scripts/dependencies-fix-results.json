@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "message": "Dependencies checked and fixed",
+  "timestamp": "2025-08-11T18:12:56.698Z",
+  "packages_checked": [
+    "@cloudflare/workers-types",
+    "@types/jest",
+    "typescript"
+  ],
+  "missing_packages": [],
+  "reinstalled": false
+}
