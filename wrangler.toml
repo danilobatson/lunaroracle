@@ -1,0 +1,22 @@
+name = "lunaroracle-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+[env.development]
+name = "lunaroracle-api-dev"
+
+[env.production]
+name = "lunaroracle-api"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "lunarcrush-universal-db"
+database_id = "your-database-id"
+
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+
+[vars]
+ENVIRONMENT = "development"

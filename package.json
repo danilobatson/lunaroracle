@@ -1,0 +1,30 @@
+{
+  "name": "lunaroracle",
+  "version": "0.1.0",
+  "description": "AI agent for creator.bid that predicts crypto price movements using social sentiment data",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest",
+    "type-check": "tsc --noEmit",
+    "db:migrate": "wrangler d1 migrations apply lunarcrush-universal-db",
+    "db:local": "wrangler d1 migrations apply lunarcrush-universal-db --local"
+  },
+  "dependencies": {
+    "lunarcrush-sdk": "^1.0.0",
+    "@google/generative-ai": "^0.17.1",
+    "hono": "^4.6.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "@types/node": "^22.7.7",
+    "typescript": "^5.6.3",
+    "wrangler": "^3.84.0",
+    "vitest": "^2.1.4"
+  },
+  "keywords": ["crypto", "ai", "prediction", "social-sentiment", "lunarcrush", "cloudflare"],
+  "author": "Danilo Batson",
+  "license": "MIT"
+}
